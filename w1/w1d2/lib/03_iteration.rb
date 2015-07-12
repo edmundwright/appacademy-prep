@@ -4,6 +4,9 @@
 # factors of a given number.
 
 def factors(num)
+  (1..num).select do |x|
+    num % x == 0
+  end
 end
 
 # ### Bubble Sort
@@ -47,9 +50,30 @@ end
 
 class Array
   def bubble_sort!
+    swap_needed = true
+    while swap_needed
+      swap_needed = false
+      i = 0
+      while i < length - 1
+        if block_given?
+          if yield(self[i], self[i+1])==1
+            self[i], self[i+1] = self[i+1], self[i]
+            swap_needed = true
+          end
+        else
+          if self[i] > self[i+1]
+            self[i], self[i+1] = self[i+1], self[i]
+            swap_needed = true
+          end
+        end
+        i += 1
+      end
+    end
+    self
   end
 
   def bubble_sort(&prc)
+    self.dup.bubble_sort!
   end
 end
 
@@ -67,9 +91,17 @@ end
 # words).
 
 def substrings(string)
+  results = []
+  (0...string.length).each do |first|
+    (first...string.length).each do |last|
+      results << string[first..last] if !results.include?(string[first..last])
+    end
+  end
+  results
 end
 
 def subwords(word, dictionary)
+  substrings(word).select { |substring| dictionary.include?(substring) }
 end
 
 # ### Doubler
@@ -77,6 +109,7 @@ end
 # array with the original elements multiplied by two.
 
 def doubler(array)
+  array.map { |element| element * 2 }
 end
 
 # ### My Each
@@ -104,6 +137,12 @@ end
 
 class Array
   def my_each(&prc)
+    i = 0
+    while i < length
+      prc.call(self[i])
+      i += 1
+    end
+    self
   end
 end
 
@@ -122,12 +161,27 @@ end
 
 class Array
   def my_map(&prc)
+    results = []
+    self.my_each do |element|
+      results << prc.call(element)
+    end
+    results
   end
 
   def my_select(&prc)
+    results = []
+    self.my_each do |element|
+      results << element if prc.call(element)
+    end
+    results
   end
 
   def my_inject(&blk)
+    result = self[0]
+    (1...length).to_a.my_each do |i|
+      result = blk.call(result, self[i])
+    end
+    result
   end
 end
 
@@ -141,4 +195,5 @@ end
 # ```
 
 def concatenate(strings)
+  strings.inject("") { |acc, string| acc + string}
 end

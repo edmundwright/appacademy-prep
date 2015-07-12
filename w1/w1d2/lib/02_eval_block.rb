@@ -45,3 +45,13 @@
 # eval_block(1, 2, 3)
 # # => "NO BLOCK GIVEN"
 # ```
+
+
+def eval_block(*arguments, &proc)
+  if proc.nil?
+    #puts "NO BLOCK GIVEN!"
+    raise
+  else
+    proc.call(*arguments)
+  end
+end

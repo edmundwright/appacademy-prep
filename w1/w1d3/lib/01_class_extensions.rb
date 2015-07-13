@@ -18,6 +18,20 @@
 
 class String
   def caesar(shift)
+    result = ""
+
+    each_byte do |code|
+      if ("a".ord.."z".ord).include?(code)
+        new_code = "a".ord + ((code + shift - "a".ord) % ("z".ord + 1 - "a".ord ))
+      elsif ("A".ord.."Z".ord).include?(code)
+        new_code = "A".ord + ((code + shift - "A".ord) % ("Z".ord + 1 - "A".ord ))
+      else
+        new_code = code
+      end
+      result << new_code.chr
+    end
+
+    result
   end
 end
 
@@ -36,6 +50,15 @@ end
 
 class Hash
   def difference(other_hash)
+    result = {}
+
+    [[self, other_hash], [other_hash, self]].each do |hash_one, hash_two|
+      hash_one.each do |key, value|
+        result[key] = value unless hash_two.include?(key)
+      end
+    end
+
+    result
   end
 end
 
@@ -98,6 +121,25 @@ end
 
 class Fixnum
   def stringify(base)
+    result = ""
+
+    characters = {10 => "a",
+                  11 => "b",
+                  12 => "c",
+                  13 => "d",
+                  14 => "e",
+                  15 => "f"}
+    (0..9).each do |num|
+      characters[num] = num.to_s
+    end
+
+    i = 1
+    while i <= self
+      result = characters[(self / i) % base] + result
+      i *= base
+    end
+
+    result
   end
 end
 

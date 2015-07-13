@@ -14,6 +14,10 @@ describe String do
     it "encodes a longer word" do
       expect("catzhatz".caesar(2)).to eq("ecvbjcvb")
     end
+
+    it "encodes a mixed case word" do
+      expect("CatZhatz".caesar(2)).to eq("EcvBjcvb")
+    end
   end
 end
 

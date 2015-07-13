@@ -93,6 +93,19 @@ describe Array do
       [3, 4]
     ] }
 
+    let(:rectangular_arr) { [
+      [1, 2, 3],
+      [4, 5, 6]
+    ] }
+
+    it "transposes a rectangular matrix" do
+      expect(rectangular_arr.my_transpose).to eq([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+    end
+
     it "transposes a small matrix" do
       expect(small_arr.my_transpose).to eq([
         [1, 3],

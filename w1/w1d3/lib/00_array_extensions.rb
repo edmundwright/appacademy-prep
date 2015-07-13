@@ -5,6 +5,7 @@
 
 class Array
   def sum
+    inject(0) { |acc, element| acc + element }
   end
 end
 
@@ -15,6 +16,11 @@ end
 
 class Array
   def square
+    map { |element| element ** 2 }
+  end
+
+  def square!
+    map! { |element| element ** 2 }
   end
 end
 
@@ -32,6 +38,13 @@ end
 
 class Array
   def my_uniq
+    result = []
+
+    each do |element|
+      result << element unless result.include?(element)
+    end
+
+    result
   end
 end
 
@@ -53,6 +66,15 @@ end
 
 class Array
   def two_sum
+    result = []
+
+    (0...length-1).each do |i|
+      (i+1...length).each do |j|
+        result << [i, j] if self[i] + self[j] == 0
+      end
+    end
+
+    result
   end
 end
 
@@ -65,6 +87,13 @@ end
 
 class Array
   def median
+    return nil if empty?
+    sorted = sort
+    if length.even?
+      (sorted[length / 2] + sorted[(length / 2) - 1]) / 2.0
+    else
+      sorted[length / 2]
+    end
   end
 end
 
@@ -117,8 +146,33 @@ end
 
 class Array
   def my_transpose
+    result = []
+    length.times { result << [] }
+
+    (0...length).each do |i|
+      (0...length).each do |j|
+        result[j] << self[i][j]
+      end
+    end
+
+    result
   end
 end
 
 # Bonus: Refactor your `Array#my_transpose` method to work with any rectangular
 # matrix (not necessarily a square one).
+
+class Array
+  def my_transpose
+    result = []
+    self[0].length.times { result << [] }
+
+    (0...length).each do |i|
+      (0...self[0].length).each do |j|
+        result[j] << self[i][j]
+      end
+    end
+
+    result
+  end
+end

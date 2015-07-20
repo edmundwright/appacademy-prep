@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Student
   attr_reader :first_name, :last_name, :courses
 
@@ -14,7 +12,24 @@ class Student
   end
 
   def enroll(new_course)
-    debugger
-    @courses << new_course
+    return if courses.include?(new_course)
+
+    courses.each do |existing_course|
+      raise "Conflict!" if new_course.conflicts_with?(existing_course)
+    end
+
+    courses << new_course
+    new_course.students << self
+  end
+
+  def course_load
+    to_return = {}
+
+    courses.each do |course|
+      to_return[course.department] = 0 unless to_return.include?(course.department)
+      to_return[course.department] += course.credits
+    end
+
+    to_return
   end
 end

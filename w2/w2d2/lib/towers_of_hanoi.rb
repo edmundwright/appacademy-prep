@@ -40,5 +40,59 @@
 # methods named above.
 
 class TowersOfHanoi
+  attr_reader :towers
 
+  def initialize
+    @towers = [[3,2,1], [], []]
+  end
+
+  def play
+    until won? do
+      render
+
+      puts "Which pile should disc be taken from?"
+      from_tower = gets.chomp.to_i
+      puts "Which pile should disc be added to?"
+      to_tower = gets.chomp.to_i
+
+      if valid_move?(from_tower, to_tower)
+        move(from_tower, to_tower)
+      else
+        puts "Invalid move."
+      end
+    end
+
+    puts "You've won!"
+  end
+
+  def move(from_tower, to_tower)
+    @towers[to_tower] << @towers[from_tower].pop
+  end
+
+  def valid_move?(from_tower, to_tower)
+    return false if @towers[from_tower].empty?
+    return true if @towers[to_tower].empty?
+    @towers[from_tower].last < @towers[to_tower].last
+  end
+
+  def won?
+    @towers[1] == [3,2,1] || @towers[2] == [3,2,1]
+  end
+
+  def render_disc(disc)
+    if disc.nil?
+      " "
+    else
+      disc
+    end
+  end
+
+  def render
+    [2, 1, 0].each do |level|
+      towers.each do |tower|
+        print render_disc(tower[level])
+      end
+      print "\n"
+    end
+  end
 end

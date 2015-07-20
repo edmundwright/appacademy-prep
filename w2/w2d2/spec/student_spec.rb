@@ -1,5 +1,6 @@
 require 'student'
 
+
 describe Student do
   let(:student) { Student.new("Johnny", "Rocket") }
 
@@ -32,7 +33,6 @@ describe Student do
       [old_course, new_course].each do |course|
         allow(course).to receive(:conflicts_with?)
       end
-
       student.enroll(new_course)
     end
 

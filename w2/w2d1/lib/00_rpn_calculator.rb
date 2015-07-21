@@ -67,7 +67,31 @@ class RPNCalculator
         push(command)
       end
     end
-    
+
     value
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  calculator = RPNCalculator.new
+
+  if ARGV.empty?
+    
+    loop do
+      input = gets.chomp
+      if input.empty?
+        puts calculator.value
+        break
+      else
+        calculator.evaluate(input)
+      end
+    end
+
+  else
+
+    File.foreach(ARGV[0]) do |line|
+      puts calculator.evaluate(line.chomp)
+    end
+
   end
 end

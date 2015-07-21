@@ -10,3 +10,26 @@
 #   shuffles the lines, and saves it to the file "{input_name}-shuffled.txt". You
 #   could create a random number using the Random class, or you could use the
 #   `shuffle` method in array.
+
+def guessing_game
+  guesses = 0
+  the_number = rand(100) + 1
+
+  loop do
+    puts "\nGuess a number."
+    guess = gets.chomp
+    guesses += 1
+
+    if guess.to_i.to_s != guess
+      puts "Invalid guess."
+      guesses -= 1
+    elsif guess.to_i > the_number
+      puts "#{guess} is too high."
+    elsif guess.to_i < the_number
+      puts "#{guess} is too low"
+    else
+      puts "Your guess of #{guess} is correct! It took you #{guesses} guesses."
+      break
+    end
+  end
+end

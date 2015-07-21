@@ -33,3 +33,15 @@ def guessing_game
     end
   end
 end
+
+def shuffle_file(file_name)
+  lines = File.readlines(file_name)
+  shuffled_lines = lines.shuffle
+  File.open("#{file_name[0..-5]}-shuffled.txt", "w") do |f|
+    f.puts shuffled_lines.join("")
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  shuffle_file(ARGV[0])
+end

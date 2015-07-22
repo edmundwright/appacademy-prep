@@ -1,20 +1,18 @@
 class XmlDocument
-  def initialize(indent = false)
-    @new_line = indent ? "\n" : ""
-    @indentation = indent ? "  " : ""
+  def initialize(please_indent = false)
+    @new_line = please_indent ? "\n" : ""
+    @indentation = please_indent ? "  " : ""
   end
 
-  def method_missing(method_name, args = {})
+  def method_missing(method_name, attributes = {})
     result = "<#{method_name}"
 
-    result << args.inject("") do |acc, (arg_name, arg_value)|
-      "#{acc} #{arg_name.to_s}=\"#{arg_value}\""
+    result << attributes.inject("") do |acc, (attr_name, attr_value)|
+      "#{acc} #{attr_name.to_s}=\"#{attr_value}\""
     end
 
     if block_given?
-      nested_lines = yield.split("\n").map { |line| "#{@indentation}#{line}" }
-      nested_string = nested_lines.join("\n")
-      result << ">#{@new_line}#{nested_string}#{@new_line}</#{method_name}"
+      result << ">#{@new_line}#{indent(yield)}</#{method_name}"
     else
       result << "/"
     end
@@ -22,5 +20,11 @@ class XmlDocument
     result << ">#{@new_line}"
 
     result
+  end
+
+  def indent(string)
+    lines = string.split("\n")
+    indented_lines = lines.map { |line| "#{@indentation}#{line}"}
+    "#{indented_lines.join("\n")}#{@new_line}"
   end
 end

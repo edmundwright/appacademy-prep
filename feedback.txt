@@ -1,1 +1,0 @@
-w1d2: 02_eval_block has conflicting instructions and spec. The instructions ask "NO BLOCK GIVEN!" to be printed when no block given; the spec expects an error to be raised (and error-raising has not been included in the material thus far).

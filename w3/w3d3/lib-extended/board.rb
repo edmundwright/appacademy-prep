@@ -1,18 +1,11 @@
 class Board
-  attr_reader :grid, :height, :width
+  attr_reader :grid, :height, :width, :ships
 
-  def initialize(grid = Board.default_grid)
-    @grid = grid
-    @height = grid.length
-    @width = grid[0].length
-  end
-
-  def self.build_size(height, width)
-    Board.new(Array.new(height) { Array.new(width) })
-  end
-
-  def self.default_grid
-    Array.new(10) { Array.new(10) }
+  def initialize(height = 5, width = 5)
+    @height = height
+    @width = width
+    @grid = Array.new(height) { Array.new(width) }
+    @ships = []
   end
 
   def [](row, col)
@@ -23,45 +16,80 @@ class Board
     @grid[row][col] = value
   end
 
-  def count
-    @grid.inject(0) do |acc, row|
-      acc + row.count { |cell| cell == :s}
+  def room_for_ship?(ship)
+    (0...@height).each do |i|
+      (0...@width).each do |j|
+        start_position = [i,j]
+        [true, false].each do |is_horizontal|
+          duplicate_ship = ship.dup
+          duplicate_ship.place(is_horizontal, start_position)
+          return true if ship_in_ok_position?(duplicate_ship)
+        end
+      end
     end
+
+    false
   end
 
-  def empty?(pos = nil)
-    if pos
-      self[*pos] != :s
-    else
-      count == 0
+  def ship_in_ok_position?(ship)
+    ship.sections.each do |section|
+      return false if !in_grid?(section.position) || !self[*section.position].nil?
     end
+
+    true
   end
 
-  def full?
-    count == @height * @width
+  def in_grid?(pos)
+    pos[0] >= 0 && pos[0] < @height && pos[1] >= 0 && pos[1] < @width
   end
 
-  def place_random_ship
-    raise "Board is full!" if full?
-    loop do
-      random_position = [rand(@height), rand(@width)]
-      if empty?(random_position)
-        self[*random_position] = :s
-        break
+  def delete_all_ships
+    @ships = []
+    (0...@height).each do |i|
+      (0...@width).each do |j|
+        self[i,j] = nil
       end
     end
   end
 
-  def populate_grid
-    (@height * @width / 5).times { place_random_ship }
+  def add_ship(ship)
+    @ships << ship
+    update_grid
   end
 
-  def won?
-    empty?
+  def destroy_at_position(pos)
+    no_ship_at_position = true
+
+    @ships.each do |ship|
+      ship.sections.each do |section|
+        if section.position == pos
+          section.destroy
+          self[*pos] = :x
+          no_ship_at_position = false
+        end
+      end
+    end
+
+    self[*pos] = :o if no_ship_at_position
   end
 
-  def display
-    cell_strings = {:s => " ", nil => " ", :o => "X", :x => "~"}
+  def update_grid
+    @ships.each do |ship|
+      ship.sections.each do |section|
+        if section.is_destroyed
+          self[*section.position] = :x
+        else
+          self[*section.position] = :s
+        end
+      end
+    end
+  end
+
+  def display(options = {:everything_is_visible => false})
+    cell_strings = {:s => " ", nil => " ", :o => "~", :x => "X"}
+    cell_strings[:s] = "S" if options[:everything_is_visible]
+
+    update_grid
 
     print "  "
     print (0...@width).to_a.inject("") { |acc, num| "#{acc}  #{num} "}
@@ -71,6 +99,6 @@ class Board
       print row.inject("") { |acc, cell| "#{acc}| #{cell_strings[cell]} " }
       print "|\n"
     end
-    print "  #{"+---" * @width}+\n"
+    print "  #{"+---" * @width}+\n\n"
   end
 end

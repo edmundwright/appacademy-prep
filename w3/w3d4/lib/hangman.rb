@@ -55,6 +55,7 @@ class Hangman
   def display_board
     puts ""
     puts @board.map { |letter| letter.nil? ? "_" : letter.upcase }.join(" ")
+    puts (0...@board.length).to_a.join(" ")
     puts ""
   end
 end
@@ -110,7 +111,7 @@ end
 
 class ComputerPlayer
   attr_reader :candidate_words
-  
+
   def initialize(dictionary)
     @dictionary = dictionary.map { |word| word.chomp }
   end

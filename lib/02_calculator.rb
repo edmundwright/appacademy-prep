@@ -7,18 +7,25 @@ def subtract(x,y)
 end
 
 def sum(numbers)
-  numbers.inject(0) { |sum_so_far, next_number| sum_so_far + next_number }
+  result = 0
+  numbers.each do |number|
+    result += number
+  end
+  result
 end
 
 def multiply(numbers)
-  numbers.inject(1) { |prod_so_far, next_number| prod_so_far * next_number }
+  result = 1  # I think; http://en.wikipedia.org/wiki/Empty_product
+  numbers.each do |number|
+    result *= number
+  end
+  result
 end
 
-def power(x,y)
-  x ** y
+def power(base,exponent)
+  base ** exponent
 end
 
 def factorial(x)
-  return 1 if x==0
-  x * factorial(x - 1)
+  multiply((1..x)) # when x is 0, returns 1 = product of empty array
 end

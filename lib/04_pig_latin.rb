@@ -1,27 +1,40 @@
-VOWELS = ["a", "e", "i", "o", "u"]
-LETTERS = ("a".."z")
-
 def translate(string)
-  string.split(" ").map do |word|
-    new_word = ""
+  vowels = %w{a e i o u}
+  consonants = ('a'..'z').to_a.delete_if { |i| vowels.include?(i) }
+
+  transformed_words = string.split(" ").map do |word|
+    new_word = word
+
     ending_punctuation = ""
-
-    (0...word.length).to_a.reverse.each do |i|
-      break if LETTERS.include?(word[i].downcase)
-      ending_punctuation = word[i] + ending_punctuation
-    end
-
-    (0...word.length - ending_punctuation.length).each do |i|
-      if VOWELS.include?(word[i].downcase) && !(word[i].downcase=="u" && word[i-1].downcase=="q")
-        new_word = word[i...word.length - ending_punctuation.length] + new_word
-        break
+    i = word.length - 1
+    while i >= 0
+      unless consonants.include?(word[i].downcase) || vowels.include?(word[i].downcase)
+        ending_punctuation = word[i] + ending_punctuation
+        i -= 1
       else
-        new_word += word[i]
+        break
       end
     end
+    new_word = new_word[0..i]
 
-    new_word.capitalize! if word==word.capitalize
+    i = 0
+    while i < word.length
+      if word[i..i+1].downcase=="qu"
+        new_word += "qu"
+        i += 2
+      elsif consonants.include?(word[i].downcase)
+        new_word += word[i].downcase
+        i += 1
+      else
+        break
+      end
+    end
+    new_word = new_word[i..-1] + "ay" + ending_punctuation
 
-    new_word + "ay" + ending_punctuation
-  end.join(" ")
+    new_word[0] = new_word[0].upcase if word[0]==word[0].upcase
+
+    new_word
+  end
+
+  transformed_words.join(" ")
 end

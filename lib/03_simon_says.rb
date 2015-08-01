@@ -1,32 +1,34 @@
-def echo(speech)
-  speech
+def echo(x)
+  x
 end
 
-def shout(speech)
-  speech.upcase
+def shout(x)
+  x.upcase
 end
 
-def repeat(speech, times = 2)
-  ([speech] * times).join(" ")
+def repeat(word, num_times = 2)
+  ([word] * num_times).join(" ")
 end
 
-def start_of_word(word, length)
-  word[0, length]
+def start_of_word(word, num_chars)
+  word[0...num_chars]
 end
 
-def first_word(string)
-  string.split(" ")[0]
+def first_word(str)
+  str.split(" ")[0]
 end
 
+def titleize(str)
+  little_words = %w{a an and as at but by en for if in nor of on or per the to
+                    vs over}
 
-def titleize(string)
-  little_words = %w{the in and over}
-  
-  string.split(" ").each_with_index.map do |word, index|
+  transformed_words = str.split(" ").each_with_index.map do |word, index|
     if little_words.include?(word) && index!=0
       word
     else
       word.capitalize
     end
-  end.join(" ")
+  end
+
+  transformed_words.join(" ")
 end

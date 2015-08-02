@@ -1,3 +1,3 @@
 # Test-First-Ruby
 
-My attempts at Test-First-Ruby exercises.
+My solutions to Test-First-Ruby exercises.
